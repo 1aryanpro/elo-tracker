@@ -53,8 +53,10 @@ class GameController {
 
   static init() {
     let data = JSON.parse(fs.readFileSync('data.json', 'UTF8'));
-    this.players = data.players;
+    this.players = data.players.sort((a, b) => a.elo - b.elo);
     this.games = data.games;
+
+    
   }
 
   static registerPlayer(name) {
@@ -107,19 +109,14 @@ let [cmd, ...args] = process.argv.slice(2);
 
 switch (cmd) {
   case 'register':
-    if (args.length != 1){
-      console.log("Incorrect Number of Parameters")
-      process.exit(1);
-    }
     GameController.registerPlayer(args[0]);
     break;
   case 'game':
-    if (args.length != 3){
-      console.log("Incorrect Number of Parameters")
-      process.exit(1);
-    }
     let gameId = GameController.newGame(args[0], args[1]);
     GameController.endGame(gameId, args[2]);
+    break;
+  case 'rankings':
+    GameController.players.forEach((player, i) => console.log(`${i+1}: ${player.name}; ${player.elo} elo`));
     break;
   default:
     console.log("that command doesn't exist or isn't defined yet");
