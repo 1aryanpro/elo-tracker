@@ -1,4 +1,5 @@
 const { v4: uuidv4 } = require('uuid');
+const fs = require('fs');
 
 function eloDiff(elo1, elo2, winner) {
   let ratingDiff = elo1 - elo2;
@@ -9,10 +10,14 @@ function eloDiff(elo1, elo2, winner) {
 }
 
 class Player {
-  constructor(name) {
+  constructor(name, elo = 1100, id = uuidv4()) {
     this.name = name;
-    this.elo = 1100;
-    this.id = uuidv4();
+    this.elo = elo;
+    this.id = id;
+  }
+
+  fromJson(data) {
+    return new Player(data.name, data.elo, data.id);
   }
 }
 
@@ -45,7 +50,12 @@ class Game {
 class GameController {
   static players = [];
   static games = [];
-  // TODO: Read players and games arrays from files
+
+  static init() {
+    let data = JSON.parse(fs.readFileSync('data.json', 'UTF8'));
+    this.players = data.players;
+    this.games = data.games;
+  }
 
   static registerPlayer(name) {
     this.players.push(new Player(name));
@@ -80,13 +90,39 @@ class GameController {
   static endGame(gameId, winner) {
     let game = this.games.filter((g) => g.id == gameId)[0];
     let newElos = Game.end(game, winner);
-    
+
     let gamePlayers = this.getPlayersById(...game.ids);
-    gamePlayers.map((player, i) => player.elo = newElos[i]);
+    gamePlayers.map((player, i) => (player.elo = newElos[i]));
   }
 
   static saveData() {
-    // TODO: Save players and games array to file
+    let data = { players: this.players, games: this.games };
+    fs.writeFileSync('data.json', JSON.stringify(data, null, 2));
   }
 }
 
+GameController.init();
+
+let [cmd, ...args] = process.argv.slice(2);
+
+switch (cmd) {
+  case 'register':
+    if (args.length != 1){
+      console.log("Incorrect Number of Parameters")
+      process.exit(1);
+    }
+    GameController.registerPlayer(args[0]);
+    break;
+  case 'game':
+    if (args.length != 3){
+      console.log("Incorrect Number of Parameters")
+      process.exit(1);
+    }
+    let gameId = GameController.newGame(args[0], args[1]);
+    GameController.endGame(gameId, args[2]);
+    break;
+  default:
+    console.log("that command doesn't exist or isn't defined yet");
+    break;
+}
+GameController.saveData();

@@ -1,0 +1,35 @@
+{
+  "players": [
+    {
+      "name": "Soren",
+      "elo": 1100,
+      "id": "6de074a4-b7c9-4f3e-904e-4a9e0529b431"
+    },
+    {
+      "name": "Sylvan",
+      "elo": 1100,
+      "id": "194864e3-5ce0-4573-80ee-3852ee4678f6"
+    },
+    {
+      "name": "Ryan",
+      "elo": 1100,
+      "id": "77fc3ae4-9fd3-4ca9-a134-249c68dda867"
+    },
+    {
+      "name": "Miguel",
+      "elo": 1100,
+      "id": "4f1a00f7-7678-4baa-aa70-0b3f7720830a"
+    },
+    {
+      "name": "Timo",
+      "elo": 1100,
+      "id": "967fe464-1a21-413f-b3e9-5a312e6c1132"
+    },
+    {
+      "name": "Aryan",
+      "elo": 1100,
+      "id": "48c2a6ad-12dd-4a9c-bde5-d003daee1a13"
+    }
+  ],
+  "games": []
+}
