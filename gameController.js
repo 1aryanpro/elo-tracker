@@ -34,10 +34,10 @@ class Game {
 
   static end(game, winner) {
     game.winner = winner;
-    if (winner == 'draw') return;
-
     let cElo = game.elos[0];
     let rElo = game.elos[1];
+
+    if (winner == 'draw') return [cElo, rElo];
 
     let winnerIndex = winner == 'runner' ? 1 : 0;
     let deltaElo = eloDiff(cElo, rElo, winnerIndex);
@@ -53,10 +53,8 @@ class GameController {
 
   static init() {
     let data = JSON.parse(fs.readFileSync('data.json', 'UTF8'));
-    this.players = data.players.sort((a, b) => a.elo - b.elo);
+    this.players = data.players.sort((a, b) => b.elo - a.elo);
     this.games = data.games;
-
-    
   }
 
   static registerPlayer(name) {
@@ -66,8 +64,8 @@ class GameController {
   static getPlayersByName(name0, name1) {
     let players = [];
     this.players.forEach((p) => {
-      if (p.name == name0) gamePlayers[0] = p;
-      if (p.name == name1) gamePlayers[1] = p;
+      if (p.name == name0) players[0] = p;
+      if (p.name == name1) players[1] = p;
     });
     return players;
   }
@@ -75,8 +73,8 @@ class GameController {
   static getPlayersById(id0, id1) {
     let players = [];
     this.players.forEach((p) => {
-      if (p.id == id0) gamePlayers[0] = p;
-      if (p.id == id1) gamePlayers[1] = p;
+      if (p.id == id0) players[0] = p;
+      if (p.id == id1) players[1] = p;
     });
     return players;
   }
@@ -89,8 +87,13 @@ class GameController {
     return game.id;
   }
 
+  static getGameById(gameID) {
+    let game = this.games.filter((g) => g.id == gameID)[0];
+    return game;
+  }
+
   static endGame(gameId, winner) {
-    let game = this.games.filter((g) => g.id == gameId)[0];
+    let game = this.getGameById(gameId);
     let newElos = Game.end(game, winner);
 
     let gamePlayers = this.getPlayersById(...game.ids);
@@ -103,23 +106,5 @@ class GameController {
   }
 }
 
-GameController.init();
+module.exports = GameController;
 
-let [cmd, ...args] = process.argv.slice(2);
-
-switch (cmd) {
-  case 'register':
-    GameController.registerPlayer(args[0]);
-    break;
-  case 'game':
-    let gameId = GameController.newGame(args[0], args[1]);
-    GameController.endGame(gameId, args[2]);
-    break;
-  case 'rankings':
-    GameController.players.forEach((player, i) => console.log(`${i+1}: ${player.name}; ${player.elo} elo`));
-    break;
-  default:
-    console.log("that command doesn't exist or isn't defined yet");
-    break;
-}
-GameController.saveData();
