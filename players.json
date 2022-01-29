@@ -1,0 +1,32 @@
+[
+ {
+  "name": "Aryan",
+  "corpElo": 1100,
+  "runElo": 1100
+ },
+ {
+  "name": "Sylvan",
+  "corpElo": 1100,
+  "runElo": 1085
+ },
+ {
+  "name": "Ryan",
+  "corpElo": 1100,
+  "runElo": 1100
+ },
+ {
+  "name": "Miguel",
+  "corpElo": 1100,
+  "runElo": 1100
+ },
+ {
+  "name": "Soren",
+  "corpElo": 1100,
+  "runElo": 1100
+ },
+ {
+  "name": "Timo",
+  "corpElo": 1100,
+  "runElo": 1100
+ }
+]

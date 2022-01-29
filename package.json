@@ -1,6 +1,9 @@
 {
   "type": "module",
   "dependencies": {
+    "chalk": "^5.0.0",
+    "enquirer": "^2.3.6",
+    "fs": "^0.0.1-security",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
